@@ -1,0 +1,14 @@
+{
+    "name": "edwardcrompton/porthtermau",
+    "description": "API wrapper for the Porth Termau service",
+    "type": "library",
+    "license": "GPL3",
+    "authors": [
+        {
+            "name": "Edward Crompton",
+            "email": "edward@ebwc.co.uk"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
