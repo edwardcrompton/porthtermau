@@ -2,7 +2,7 @@
     "name": "edwardcrompton/porthtermau",
     "description": "API wrapper for the Porth Termau service",
     "type": "library",
-    "license": "GPL3",
+    "license": "GPL-2.0-or-later",
     "authors": [
         {
             "name": "Edward Crompton",
