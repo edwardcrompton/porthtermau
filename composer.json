@@ -10,5 +10,7 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {}
+    "require": {
+        "paquettg/php-html-parser": "^3.1"
+    }
 }

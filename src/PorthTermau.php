@@ -2,6 +2,8 @@
 
 namespace PorthTermau;
 
+use PHPHtmlParser\Dom;
+
 /**
  * Wrapper class for the PorthTermau API.
  *
@@ -10,7 +12,7 @@ namespace PorthTermau;
  * $api = new PorthTermau\PorthTermauWrapper(
  *   ['key' => 'secret key', 'referer' => 'http://llennatur.cymru']
  * );
- * echo $api->searchTerm('cy', 'celyn');
+ * echo $api->searchForTerm('cy', 'celyn');
  *
  */
 class PorthTermauWrapper {
@@ -57,10 +59,30 @@ class PorthTermauWrapper {
    *   The search term.
    * @param int $results
    *   The number of results to return.
+   *
+   * @return array
+   *   An array of result objects.
    */
-  public function searchTerm($language, $term, $results = 1) {
-    $request = $this->searchTermRequest($language, $term);
-    // process the json here to return only the specified number of results.
+  public function searchForTerm($language, $term, $results = 1) {
+    $response = $this->searchTermRequest($language, $term);
+    $responseObject = json_decode($response);
+    return array_slice($responseObject->entries, 0, $results);
+  }
+
+  /**
+   * Translate term.
+   *
+   * @param string $language
+   *   The two letter language code of the language to translate to.
+   * @param string $term
+   *   The search term in any language.
+   */
+  public function translateTerm($language, $term) {
+    $response = $this->searchForTerm($language, $term);
+
+    $dom = new Dom;
+    $dom->loadStr($response[0]->src);
+    $a = $dom->find('PT_LanguageSection')[0];
   }
 
   /**
@@ -70,6 +92,9 @@ class PorthTermauWrapper {
    *   The two letter language code of the search term.
    * @param string $term
    *   The search term.
+   *
+   * @return string
+   *   A json response.
    */
   protected function searchTermRequest($language, $term) {
     return $this->request([
@@ -86,12 +111,18 @@ class PorthTermauWrapper {
    * @param string $letter
    *   Returns terms beginning with this letter of the alphabet. If null
    *   returns all terms.
+   *
+   * @return string
+   *   A json response.
    */
   public function listTerms($language, $letter = null) {
-    return $this->request([
-      'sln' => $language,
-      'letter' => $letter,
-    ]);
+    $parameters = ['sln' => $language];
+
+    if ($letter) {
+      $parameters['letter'] = $letter;
+    }
+
+    return $this->request($parameters);
   }
 
   /**
@@ -106,7 +137,7 @@ class PorthTermauWrapper {
   /**
    * Get the current referer value.
    */
-  public function getReferrer() {
+  public function getReferer() {
     return $this->headers['Referer'];
   }
 
