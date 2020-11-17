@@ -1,20 +1,15 @@
 <?php
 
-/**
- * @file
- *  Contains class TestTranslateTerm.
- */
-
 namespace PorthTermau;
 
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class TestTranslateTerm
+ * Test class for PorthTermauWrapper.
  */
 class PorthTermauWrapperTest extends TestCase {
 
   public function testTranslateTerm() {
-    $api = new PorthTermauWrapper(['key' => '', 'referer' => 'http://llennatur.cymru']);
+    $api = new PorthTermauWrapper(['referer' => 'http://llennatur.cymru']);
   }
 }
