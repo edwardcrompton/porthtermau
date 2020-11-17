@@ -2,17 +2,18 @@
 
 namespace PorthTermau;
 
+require_once 'vendor/autoload.php';
 use PHPHtmlParser\Dom;
 
 /**
  * Wrapper class for the PorthTermau API.
  *
  * Usage:
- * include('src/PorthTermau.php');
+ * include('src/PorthTermauWrapper.php');
  * $api = new PorthTermau\PorthTermauWrapper(
  *   ['key' => 'secret key', 'referer' => 'http://llennatur.cymru']
  * );
- * echo $api->searchForTerm('cy', 'celyn');
+ * $api->searchForTerm('cy', 'celyn');
  *
  */
 class PorthTermauWrapper {
@@ -23,14 +24,19 @@ class PorthTermauWrapper {
   const TERM_ENDPOINT = 'https://api.termau.org/Search/Default.ashx';
 
   /**
+   * HTML Dom property for the term name.
+   */
+  const TERM_PROPERTY = 'PT_term';
+
+  /**
    * An array of headers to send with a request.
    */
-  protected array $headers;
+  protected $headers;
 
   /**
    * The api key to use for requests.
    */
-  protected string $apiKey;
+  protected $apiKey;
 
   /**
    *
@@ -79,10 +85,28 @@ class PorthTermauWrapper {
    */
   public function translateTerm($language, $term) {
     $response = $this->searchForTerm($language, $term);
+    $this->parseResponse($language, static::TERM_PROPERTY, $response);
+  }
 
+  /**
+   * Parse the response to return a given property in a given language.
+   *
+   * @param type $language
+   *   Two letter language code to look for a value in.
+   * @param type $property
+   *   The value to return.
+   * @param type $response
+   *   The search response.
+   *
+   * @return string
+   *   The parsed response string.
+   */
+  public function parseResponse($language, $property, $response) {
     $dom = new Dom;
     $dom->loadStr($response[0]->src);
-    $a = $dom->find('PT_LanguageSection')[0];
+
+    $cy = $dom->find("[property=PT_LanguageSection][lang=${language}] [property=${property}]")[0];
+    return $cy->text;
   }
 
   /**
