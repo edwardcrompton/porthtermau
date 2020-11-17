@@ -10,4 +10,4 @@ This is currently a work in progress and more documentation will follow.
 
 To run phpunit tests:
 
-`PORTHTERMAU_API_KEY='API KEY' ./vendor/bin/phpunit tests`
+`./vendor/bin/phpunit tests`
