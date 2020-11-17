@@ -1,8 +1,9 @@
 <?php
 
-include('src/PorthTermau.php');
+include('src/PorthTermau/PorthTermauWrapper.php');
 
-$api = new PorthTermau\PorthTermauWrapper(['key' => '', 'referer' => 'http://llennatur.cymru']);
+$api = new PorthTermau\PorthTermauWrapper(['referer' => 'http://llennatur.cymru']);
 
-$api->translateTerm('en', 'Vulpes vulpes');
+echo $api->translateTerm('en', 'Vulpes vulpes') . "\n";
+echo $api->translateTerm('cy', 'Vulpes vulpes') . "\n";
 

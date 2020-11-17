@@ -29,6 +29,11 @@ class PorthTermauWrapper {
   const TERM_PROPERTY = 'PT_term';
 
   /**
+   * The name of the environment variable holding the api key.
+   */
+  const API_KEY_ENV_VAR_NAME = 'PORTHTERMAU_API_KEY';
+  
+  /**
    * An array of headers to send with a request.
    */
   protected $headers;
@@ -48,9 +53,13 @@ class PorthTermauWrapper {
    *   ]
    */
   public function __construct($options) {
-    if (isset($options['key'])) {
-      $this->setApiKey($options['key']);
+    $envApiKey = isset($options['key']) ? $options['key'] : getenv(static::API_KEY_ENV_VAR_NAME);
+    
+    if (!$envApiKey) {
+      throw new \Exception('An API key must be supplied as a constructor parameter or an environment variable.');
     }
+    $this->setApiKey($envApiKey);
+    
     if (isset($options['referer'])) {
       $this->setReferer($options['referer']);
     }
@@ -85,7 +94,7 @@ class PorthTermauWrapper {
    */
   public function translateTerm($language, $term) {
     $response = $this->searchForTerm($language, $term);
-    $this->parseResponse($language, static::TERM_PROPERTY, $response);
+    return $this->parseResponse($language, static::TERM_PROPERTY, $response);
   }
 
   /**
