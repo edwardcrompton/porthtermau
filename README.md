@@ -18,7 +18,7 @@ To clone from git and install:
 
 `git clone git@github.com:edwardcrompton/porthtermau.git`
 `cd porthtermau`
-`composer install && composer dump-autoload`
+`composer install`
 
 To run phpunit tests:
 
