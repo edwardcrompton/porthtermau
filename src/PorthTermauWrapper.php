@@ -2,7 +2,7 @@
 
 namespace PorthTermau;
 
-require '../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 use PHPHtmlParser\Dom;
 
 /**
