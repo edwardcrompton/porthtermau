@@ -32,7 +32,7 @@ class PorthTermauWrapper {
    * The name of the environment variable holding the api key.
    */
   const API_KEY_ENV_VAR_NAME = 'PORTHTERMAU_API_KEY';
-  
+
   /**
    * An array of headers to send with a request.
    */
@@ -54,12 +54,12 @@ class PorthTermauWrapper {
    */
   public function __construct($options) {
     $envApiKey = isset($options['key']) ? $options['key'] : getenv(static::API_KEY_ENV_VAR_NAME);
-    
+
     if (!$envApiKey) {
       throw new \Exception('An API key must be supplied as a constructor parameter or an environment variable.');
     }
     $this->setApiKey($envApiKey);
-    
+
     if (isset($options['referer'])) {
       $this->setReferer($options['referer']);
     }
@@ -91,11 +91,35 @@ class PorthTermauWrapper {
    *   The two letter language code of the language to translate to.
    * @param string $term
    *   The search term in any language.
+   *
+   * @return string
+   *   The translated term.
    */
   public function translateTerm($language, $term) {
     $response = $this->searchForTerm($language, $term);
     return $this->parseResponse($language, static::TERM_PROPERTY, $response);
   }
+
+  /**
+   * Get an image URL associated with a term.
+   *
+   * @param string $language
+   *   The two letter language code of the language to translate to.
+   * @param string $term
+   *   The search term in any language.
+   *
+   * @return string
+   *   The image URL.
+   */
+  public function termImageThumb($language, $term) {
+    $response = $this->searchForTerm($language, $term);
+    $dom = new Dom;
+    $dom->loadStr($response[0]->src);
+
+    $element = $dom->find("[property=PT_Definitions] [lang=${language}] img")[0];
+    return $element->src;
+  }
+
 
   /**
    * Parse the response to return a given property in a given language.
@@ -114,8 +138,8 @@ class PorthTermauWrapper {
     $dom = new Dom;
     $dom->loadStr($response[0]->src);
 
-    $cy = $dom->find("[property=PT_LanguageSection][lang=${language}] [property=${property}]")[0];
-    return $cy->text;
+    $element = $dom->find("[property=PT_LanguageSection][lang=${language}] [property=${property}]")[0];
+    return $element->text;
   }
 
   /**
