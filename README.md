@@ -25,3 +25,26 @@ To clone from git and install:
 To run phpunit tests:
 
 `./vendor/bin/phpunit tests`
+
+### Usage
+
+```
+include('src/PorthTermauWrapper.php');
+$api = new PorthTermau\PorthTermauWrapper(
+  ['key' => 'secret key', 'referer' => 'http://llennatur.cymru']
+);
+// Look up a term
+$term = $api->lookup('Vulpes vulpes');
+
+// Translate the term to Cymraeg
+$cyTerm = $term->translate('cy');
+
+// Translate the term to English
+$enTerm = $term->translate('en');
+
+// Get the Url of the term in cy.wikipedia.org.
+$url = $term->getUrl();
+
+// Get an thumbnail image URL for the term
+$img = $term->getImageThumb();
+```

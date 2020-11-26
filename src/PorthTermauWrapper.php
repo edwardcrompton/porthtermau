@@ -7,14 +7,6 @@ use PHPHtmlParser\Dom;
 
 /**
  * Wrapper class for the PorthTermau API.
- *
- * Usage:
- * include('src/PorthTermauWrapper.php');
- * $api = new PorthTermau\PorthTermauWrapper(
- *   ['key' => 'secret key', 'referer' => 'http://llennatur.cymru']
- * );
- * $api->searchForTerm('cy', 'celyn');
- *
  */
 class PorthTermauWrapper {
 
