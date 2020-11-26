@@ -29,6 +29,11 @@ class PorthTermauWrapper {
   const TERM_PROPERTY = 'PT_term';
 
   /**
+   * Language for non-translated properties of the API response.
+   */
+  const DEFAULT_LANGUAGE = 'cy';
+
+  /**
    * The name of the environment variable holding the api key.
    */
   const API_KEY_ENV_VAR_NAME = 'PORTHTERMAU_API_KEY';
@@ -117,22 +122,33 @@ class PorthTermauWrapper {
   }
 
   /**
-   * Get an image URL associated with a term.
-   *
-   * @param string $language
-   *   The two letter language code of the language to translate to.
-   * @param string $term
-   *   The search term in any language.
+   * Get the URL of a related image.
    *
    * @return string
    *   The image URL.
    */
-  public function getImageThumb($language) {
+  public function getImageThumb() {
     $dom = new Dom;
     $dom->loadStr($this->response[0]->src);
 
-    $element = $dom->find("[property=PT_Definitions] [lang=${language}] img")[0];
+    $element = $dom->find("[property=PT_Definitions] [lang=" . static::DEFAULT_LANGUAGE . "] img")[0];
     return $element->src;
+  }
+
+  /**
+   * Get the URL of the related article on Wikipedia.
+   *
+   * This is currently only available in Welsh.
+   *
+   * @return string
+   *   The article URL.
+   */
+  public function getUrl() {
+    $dom = new Dom;
+    $dom->loadStr($this->response[0]->src);
+
+    $element = $dom->find("[property=PT_Definitions] [lang=" . static::DEFAULT_LANGUAGE . "] a")[0];
+    return $element->href;
   }
 
   /**
