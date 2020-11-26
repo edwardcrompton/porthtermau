@@ -85,6 +85,20 @@ class PorthTermauWrapper {
   }
 
   /**
+   * Make a request to the API for a search term.
+   *
+   * @param string $term
+   *   The term to search for.
+   *
+   * @return $this
+   *   The api wrapper object, so that this method can be chained.
+   */
+  public function lookup($term) {
+    $this->response = $this->searchForTerm('lat', $term);
+    return $this;
+  }
+
+  /**
    * Translate term.
    *
    * @param string $language
@@ -95,9 +109,11 @@ class PorthTermauWrapper {
    * @return string
    *   The translated term.
    */
-  public function translateTerm($language, $term) {
-    $response = $this->searchForTerm($language, $term);
-    return $this->parseResponse($language, static::TERM_PROPERTY, $response);
+  public function translate($language) {
+    if (!isset($this->response)) {
+      throw new Exception('Attempting to translate a term without doing a lookup first.');
+    }
+    return $this->parseResponse($language, static::TERM_PROPERTY, $this->response);
   }
 
   /**
@@ -111,15 +127,13 @@ class PorthTermauWrapper {
    * @return string
    *   The image URL.
    */
-  public function termImageThumb($language, $term) {
-    $response = $this->searchForTerm($language, $term);
+  public function getImageThumb($language) {
     $dom = new Dom;
-    $dom->loadStr($response[0]->src);
+    $dom->loadStr($this->response[0]->src);
 
     $element = $dom->find("[property=PT_Definitions] [lang=${language}] img")[0];
     return $element->src;
   }
-
 
   /**
    * Parse the response to return a given property in a given language.
@@ -158,28 +172,6 @@ class PorthTermauWrapper {
       'dln' => $language,
       'string' => $term,
     ]);
-  }
-
-  /**
-   * List multiple terms in a particular language.
-   *
-   * @param string $language
-   *   The two letter language code in which to list terms.
-   * @param string $letter
-   *   Returns terms beginning with this letter of the alphabet. If null
-   *   returns all terms.
-   *
-   * @return string
-   *   A json response.
-   */
-  public function listTerms($language, $letter = null) {
-    $parameters = ['sln' => $language];
-
-    if ($letter) {
-      $parameters['letter'] = $letter;
-    }
-
-    return $this->request($parameters);
   }
 
   /**
