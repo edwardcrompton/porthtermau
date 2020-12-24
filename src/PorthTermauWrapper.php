@@ -100,8 +100,6 @@ class PorthTermauWrapper {
    *
    * @param string $language
    *   The two letter language code of the language to translate to.
-   * @param string $term
-   *   The search term in any language.
    *
    * @return string
    *   The translated term.
@@ -111,6 +109,19 @@ class PorthTermauWrapper {
       throw new Exception('Attempting to translate a term without doing a lookup first.');
     }
     return $this->parseResponse($language, static::TERM_PROPERTY, $this->response);
+  }
+
+  /**
+   * Get the title of the term in a given language.
+   * 
+   * @param string $language
+   *   The two letter language code of the language to fetch the title in.
+   * 
+   * @return string
+   *   The term title.
+   */
+  public function getTitle($language) {
+    return $this->translate($language);
   }
 
   /**
